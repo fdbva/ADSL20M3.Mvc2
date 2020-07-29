@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Model.Models
 {
@@ -12,5 +9,7 @@ namespace Domain.Model.Models
         public string Nome { get; set; }
         public string UltimoNome { get; set; }
         public DateTime Nascimento { get; set; }
+
+        public List<LivroModel> Livros { get; set; }
     }
 }

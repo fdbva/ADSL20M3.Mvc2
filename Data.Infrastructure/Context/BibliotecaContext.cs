@@ -16,5 +16,6 @@ namespace Data.Infrastructure.Context
         }
 
         public DbSet<AutorModel> Autores { get; set; }
+        public DbSet<LivroModel> Livros { get; set; }
     }
 }

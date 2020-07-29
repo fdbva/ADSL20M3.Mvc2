@@ -34,6 +34,8 @@ namespace ASDL20M3.Mvc2
             //Registro das dependências
             services.AddScoped<IAutorService, AutorService>();
             services.AddScoped<IAutorRepository, AutorRepository>();
+            services.AddScoped<ILivroService, LivroService>();
+            services.AddScoped<ILivroRepository, LivroRepository>();
 
             services.AddDbContext<BibliotecaContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("BibliotecaContext")));
