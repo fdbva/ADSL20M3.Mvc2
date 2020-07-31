@@ -14,6 +14,7 @@ using Data.Infrastructure.Repositories;
 using Domain.Model.Interfaces.Repositories;
 using Domain.Model.Interfaces.Services;
 using Domain.Service.Services;
+using Infrastructure.Crosscutting.IoC;
 
 namespace ASDL20M3.Mvc2
 {
@@ -32,13 +33,7 @@ namespace ASDL20M3.Mvc2
             services.AddControllersWithViews();
 
             //Registro das dependências
-            services.AddScoped<IAutorService, AutorService>();
-            services.AddScoped<IAutorRepository, AutorRepository>();
-            services.AddScoped<ILivroService, LivroService>();
-            services.AddScoped<ILivroRepository, LivroRepository>();
-
-            services.AddDbContext<BibliotecaContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("BibliotecaContext")));
+            services.RegisterDependencies(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

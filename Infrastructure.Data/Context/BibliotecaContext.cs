@@ -1,4 +1,5 @@
 ﻿using Domain.Model.Models;
+using Infrastructure.Data.Context.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Infrastructure.Context
@@ -17,5 +18,13 @@ namespace Data.Infrastructure.Context
 
         public DbSet<AutorModel> Autores { get; set; }
         public DbSet<LivroModel> Livros { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new LivroModelConfiguration());
+            modelBuilder.ApplyConfiguration(new AutorModelConfiguration());
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

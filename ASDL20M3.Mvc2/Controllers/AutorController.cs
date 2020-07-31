@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Domain.Model.Interfaces.Services;
 using Domain.Model.Models;
+using Domain.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
