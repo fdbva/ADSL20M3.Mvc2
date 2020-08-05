@@ -157,5 +157,16 @@ namespace ASDL20M3.Mvc2.Controllers
         {
             return _livroService.GetById(id) != null;
         }
+
+        [AcceptVerbs("GET", "POST")]
+        public IActionResult CheckIsbn(string isbn, int id)
+        {
+            if (!_livroService.CheckIsbn(isbn, id))
+            {
+                return Json($"ISBN {isbn} já está sendo usado.");
+            }
+
+            return Json(true);
+        }
     }
 }

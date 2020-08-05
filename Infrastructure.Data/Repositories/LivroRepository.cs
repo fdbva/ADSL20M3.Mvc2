@@ -53,5 +53,14 @@ namespace Data.Infrastructure.Repositories
             _bibliotecaContext.Remove(livroModel);
             _bibliotecaContext.SaveChanges();
         }
+
+        public LivroModel GetIsbnNotFromThisId(string isbn, int id)
+        {
+            var result = _bibliotecaContext
+                .Livros
+                .FirstOrDefault(x => x.Isbn == isbn && x.Id != id);
+
+            return result;
+        }
     }
 }

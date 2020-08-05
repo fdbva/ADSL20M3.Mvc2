@@ -39,5 +39,12 @@ namespace Domain.Service.Services
         {
             _livroRepository.Delete(id);
         }
+
+        public bool CheckIsbn(string isbn, int id)
+        {
+            var livroModel = _livroRepository.GetIsbnNotFromThisId(isbn, id);
+
+            return livroModel is null;
+        }
     }
 }

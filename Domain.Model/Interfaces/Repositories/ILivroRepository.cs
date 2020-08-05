@@ -10,5 +10,6 @@ namespace Domain.Model.Interfaces.Repositories
         LivroModel Create(LivroModel livroModel);
         LivroModel Update(LivroModel livroModel);
         void Delete(int id);
+        LivroModel GetIsbnNotFromThisId(string isbn, int id);
     }
 }
