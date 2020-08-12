@@ -2,6 +2,7 @@
 using Domain.Model.Interfaces.Services;
 using Domain.Model.Models;
 using Domain.Service.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,6 +52,7 @@ namespace ASDL20M3.Mvc2.Controllers
         // POST: Autor/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,UltimoNome,Nascimento")] AutorModel autorModel)
@@ -84,6 +86,7 @@ namespace ASDL20M3.Mvc2.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult Edit(int id, [Bind("Id,Nome,UltimoNome,Nascimento")] AutorModel autorModel)
         {
             if (id != autorModel.Id)
@@ -131,6 +134,7 @@ namespace ASDL20M3.Mvc2.Controllers
         }
 
         // POST: Autor/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

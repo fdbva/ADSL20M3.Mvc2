@@ -6,9 +6,9 @@ namespace Data.Infrastructure.Context
 {
     //Lembrar de selecionar default project no Dropdown
 
-    //Add-Migration
+    //Add-Migration -context BibliotecaContext
 
-    //Update-database
+    //Update-database -context BibliotecaContext
     public class BibliotecaContext : DbContext
     {
         public BibliotecaContext(DbContextOptions<BibliotecaContext> options)

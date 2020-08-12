@@ -31,6 +31,7 @@ namespace ASDL20M3.Mvc2
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddRazorPages(); //Auth
 
             //Registro das dependências
             services.RegisterDependencies(Configuration);
@@ -54,6 +55,7 @@ namespace ASDL20M3.Mvc2
 
             app.UseRouting();
 
+            app.UseAuthentication(); //Auth
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -61,6 +63,7 @@ namespace ASDL20M3.Mvc2
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages(); //Auth
             });
         }
     }

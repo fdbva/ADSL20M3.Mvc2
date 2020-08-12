@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Domain.Model.Interfaces.Services;
+using Domain.Model.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Data.Infrastructure.Context;
-using Domain.Model.Interfaces.Services;
-using Domain.Model.Models;
 
 namespace ASDL20M3.Mvc2.Controllers
 {
+    [Authorize]
     public class LivroController : Controller
     {
         private readonly IAutorService _autorService;
