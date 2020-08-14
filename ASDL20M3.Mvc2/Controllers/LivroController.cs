@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ASDL20M3.Mvc2.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "Admin")]
     public class LivroController : Controller
     {
         private readonly IAutorService _autorService;

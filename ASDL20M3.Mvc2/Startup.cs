@@ -35,6 +35,20 @@ namespace ASDL20M3.Mvc2
 
             //Registro das dependências
             services.RegisterDependencies(Configuration);
+
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    IConfigurationSection googleAuthNSection =
+                        Configuration.GetSection("Authentication:Google");
+
+                    options.ClientId = googleAuthNSection["ClientId"];
+                    options.ClientSecret = googleAuthNSection["ClientSecret"];
+                });
+
+            services.AddAuthorization(options =>
+                options.AddPolicy("Admin",
+                    policy => policy.RequireClaim("AdminClaim")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
