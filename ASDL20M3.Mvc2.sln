@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Data", "Infr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Crosscutting.IoC", "Infrastructure.Crosscutting.IoC\Infrastructure.Crosscutting.IoC.csproj", "{F305234A-A761-4B25-A2B9-8E836DB4F8D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.WebApi", "Application.WebApi\Application.WebApi.csproj", "{E21E1800-9E36-4014-B918-206E2686A3B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{F305234A-A761-4B25-A2B9-8E836DB4F8D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F305234A-A761-4B25-A2B9-8E836DB4F8D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F305234A-A761-4B25-A2B9-8E836DB4F8D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E21E1800-9E36-4014-B918-206E2686A3B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E21E1800-9E36-4014-B918-206E2686A3B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E21E1800-9E36-4014-B918-206E2686A3B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E21E1800-9E36-4014-B918-206E2686A3B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +63,7 @@ Global
 		{2757A29E-1780-4427-90B1-0773C1EABDCC} = {2CD9FF50-2E84-4637-BFF9-4A93FAFDF669}
 		{11E1EC6A-DB6A-44EE-B0D9-B98AC2CAE292} = {40BEFC98-38EC-448E-86DC-BEC1BE12DBB5}
 		{F305234A-A761-4B25-A2B9-8E836DB4F8D5} = {40BEFC98-38EC-448E-86DC-BEC1BE12DBB5}
+		{E21E1800-9E36-4014-B918-206E2686A3B5} = {626E7B63-2443-4CD6-A6CD-D12EBD2DA2E4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3025BE34-C9B9-4F64-ABE9-69FFDBE16D9A}

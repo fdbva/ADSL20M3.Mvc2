@@ -52,10 +52,10 @@ namespace ASDL20M3.Mvc2.Controllers
         // POST: Autor/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
+        //[Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,UltimoNome,Nascimento")] AutorModel autorModel)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([FromBody] AutorModel autorModel)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace ASDL20M3.Mvc2.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        //[Authorize]
         public IActionResult Edit(int id, [Bind("Id,Nome,UltimoNome,Nascimento")] AutorModel autorModel)
         {
             if (id != autorModel.Id)
@@ -134,7 +134,7 @@ namespace ASDL20M3.Mvc2.Controllers
         }
 
         // POST: Autor/Delete/5
-        [Authorize]
+        //[Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
