@@ -56,7 +56,7 @@ namespace Application.WebApi.Controllers
             return BadRequest("Existe algum valor inválido passado.");
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public IActionResult OnPut(int id, AutorModel autorModel)
         {
             if (id != autorModel.Id)
@@ -89,7 +89,7 @@ namespace Application.WebApi.Controllers
             //}
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult OnDelete(int id)
         {
             _autorService.Delete(id);

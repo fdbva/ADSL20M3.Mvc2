@@ -1,53 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Domain.Model.Interfaces.Services;
+using ASDL20M3.Mvc2.HttpServices;
 using Domain.Model.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace ASDL20M3.Mvc2.Controllers
 {
     public class AutorController : Controller
     {
-        private readonly IAutorService _autorService;
+        private readonly IAutorHttpClient _autorHttpClient;
 
         //Lembrar de registrar dependência no Startup.cs
         public AutorController(
-            IAutorService autorService)
+            IAutorHttpClient autorHttpClient)
         {
-            _autorService = autorService;
+            _autorHttpClient = autorHttpClient;
         }
 
         // GET: Autor
         public async Task<IActionResult> Index()
         {
-            var httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:44365/")
-            };
+            var autores = await _autorHttpClient.GetAllAsync();
 
-            //Api antiga de GetAsync
-            //var getResponse = await httpClient.GetAsync("api/autor");
-
-            //var content = getResponse.Content;
-            //var contentString = await content.ReadAsStringAsync();
-            //var autores = JsonSerializer.Deserialize<IEnumerable<AutorModel>>(contentString);
-
-            //Tem algum detalhe errado ainda na opção abaixo
-            //var stream = await content.ReadAsStreamAsync();
-            //var autores = await JsonSerializer
-            //    .DeserializeAsync<IEnumerable<AutorModel>>(stream);
-
-            var response = await httpClient
-                .GetFromJsonAsync<IEnumerable<AutorModel>>(
-                    "api/autor");
-
-            return View(response);
+            return View(autores);
         }
 
         // GET: Autor/Details/5
@@ -58,16 +36,9 @@ namespace ASDL20M3.Mvc2.Controllers
                 return NotFound();
             }
 
-            var httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:44365/")
-            };
-
             try
             {
-                var autorModel = await httpClient
-                    .GetFromJsonAsync<AutorModel>(
-                        $"api/autor/{id.Value}");
+                var autorModel = await _autorHttpClient.GetByIdAsync(id.Value);
 
                 return View(autorModel);
             }
@@ -104,32 +75,17 @@ namespace ASDL20M3.Mvc2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var httpClient = new HttpClient
-                {
-                    BaseAddress = new Uri("https://localhost:44365/")
-                };
-                var httpResponseMessage = await httpClient
-                    .PostAsJsonAsync<AutorModel>(
-                        $"api/autor/", autorModel);
-
-                var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
-
                 try
                 {
-                    var autorResponse = await JsonSerializer
-                        .DeserializeAsync<AutorModel>(
-                            contentStream, 
-                            new JsonSerializerOptions
-                            {
-                                IgnoreNullValues = true, PropertyNameCaseInsensitive = true
-                            });
+                    var autor = await _autorHttpClient.CreateAsync(autorModel);
+                    return RedirectToAction(nameof(Details), new { id = autor.Id });
                 }
-                catch (JsonException) // Invalid JSON
+                catch (JsonException e)
                 {
-                    Console.WriteLine("Invalid JSON.");
+                    return View("Error");
                 }
 
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
             }
             return View(autorModel);
         }
@@ -142,7 +98,7 @@ namespace ASDL20M3.Mvc2.Controllers
                 return NotFound();
             }
 
-            var autorModel = _autorService.GetById(id.Value);
+            var autorModel = await _autorHttpClient.GetByIdAsync(id.Value);
             if (autorModel == null)
             {
                 return NotFound();
@@ -156,7 +112,7 @@ namespace ASDL20M3.Mvc2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //[Authorize]
-        public IActionResult Edit(int id, [Bind("Id,Nome,UltimoNome,Nascimento")] AutorModel autorModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,UltimoNome,Nascimento")] AutorModel autorModel)
         {
             if (id != autorModel.Id)
             {
@@ -167,11 +123,11 @@ namespace ASDL20M3.Mvc2.Controllers
             {
                 try
                 {
-                    _autorService.Update(autorModel);
+                    var autorAtualizado = await _autorHttpClient.UpdateAsync(autorModel);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AutorModelExists(autorModel.Id))
+                    if (!await AutorModelExists(autorModel.Id))
                     {
                         return NotFound();
                     }
@@ -186,14 +142,14 @@ namespace ASDL20M3.Mvc2.Controllers
         }
 
         // GET: Autor/Delete/5
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var autorModel = _autorService.GetById(id.Value);
+            var autorModel = await _autorHttpClient.GetByIdAsync(id.Value);
             if (autorModel == null)
             {
                 return NotFound();
@@ -208,13 +164,13 @@ namespace ASDL20M3.Mvc2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _autorService.Delete(id);
+            await _autorHttpClient.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AutorModelExists(int id)
+        private async Task<bool> AutorModelExists(int id)
         {
-            var autorEncontrado = _autorService.GetById(id);
+            var autorEncontrado = await _autorHttpClient.GetByIdAsync(id);
             return autorEncontrado != null;
         }
     }

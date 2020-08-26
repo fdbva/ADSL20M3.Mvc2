@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ASDL20M3.Mvc2.HttpServices;
+using ASDL20M3.Mvc2.HttpServices.Implementations;
+using Infrastructure.Crosscutting.IoC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Data.Infrastructure.Context;
-using Data.Infrastructure.Repositories;
-using Domain.Model.Interfaces.Repositories;
-using Domain.Model.Interfaces.Services;
-using Domain.Service.Services;
-using Infrastructure.Crosscutting.IoC;
 
 namespace ASDL20M3.Mvc2
 {
@@ -35,6 +27,16 @@ namespace ASDL20M3.Mvc2
 
             //Registro das dependências
             services.RegisterDependencies(Configuration);
+
+            services.AddHttpClient<IAutorHttpClient, AutorHttpClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44365/api/autor/");
+            });
+
+            services.AddHttpClient<ILivroHttpClient, LivroHttpClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44365/api/livro/");
+            });
 
             services.AddAuthentication()
                 .AddGoogle(options =>

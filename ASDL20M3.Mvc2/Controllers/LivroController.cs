@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using ASDL20M3.Mvc2.HttpServices;
 using Domain.Model.Interfaces.Services;
 using Domain.Model.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,21 +13,21 @@ namespace ASDL20M3.Mvc2.Controllers
     [Authorize(Policy = "Admin")]
     public class LivroController : Controller
     {
-        private readonly IAutorService _autorService;
-        private readonly ILivroService _livroService;
+        private readonly IAutorHttpClient _autorHttpClient;
+        private readonly ILivroHttpClient _livroHttpClient;
 
         public LivroController(
-            IAutorService autorService,
-            ILivroService livroService)
+            IAutorHttpClient autorHttpClient,
+            ILivroHttpClient livroHttpClient)
         {
-            _autorService = autorService;
-            _livroService = livroService;
+            _autorHttpClient = autorHttpClient;
+            _livroHttpClient = livroHttpClient;
         }
 
         // GET: Livro
         public async Task<IActionResult> Index()
         {
-            var bibliotecaContext = _livroService.GetAll();
+            var bibliotecaContext = await _livroHttpClient.GetAllAsync();
             return View(bibliotecaContext.ToList());
         }
 
@@ -38,7 +39,7 @@ namespace ASDL20M3.Mvc2.Controllers
                 return NotFound();
             }
 
-            var livroModel = _livroService.GetById(id.Value);
+            var livroModel = await _livroHttpClient.GetByIdAsync(id.Value);
             if (livroModel == null)
             {
                 return NotFound();
@@ -48,9 +49,9 @@ namespace ASDL20M3.Mvc2.Controllers
         }
 
         // GET: Livro/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var autores = _autorService.GetAll();
+            var autores = await _autorHttpClient.GetAllAsync();
             ViewData["AutorId"] = new SelectList(autores, "Id", "Id");
             return View();
         }
@@ -64,10 +65,10 @@ namespace ASDL20M3.Mvc2.Controllers
         {
             if (ModelState.IsValid)
             {
-                _livroService.Create(livroModel);
+                await _livroHttpClient.CreateAsync(livroModel);
                 return RedirectToAction(nameof(Index));
             }
-            var autores = _autorService.GetAll();
+            var autores = await _autorHttpClient.GetAllAsync();
             ViewData["AutorId"] = new SelectList(autores, "Id", "Id", livroModel.AutorId);
             return View(livroModel);
         }
@@ -80,12 +81,12 @@ namespace ASDL20M3.Mvc2.Controllers
                 return NotFound();
             }
 
-            var livroModel = _livroService.GetById(id.Value);
+            var livroModel = await _livroHttpClient.GetByIdAsync(id.Value);
             if (livroModel == null)
             {
                 return NotFound();
             }
-            var autores = _autorService.GetAll();
+            var autores = await _autorHttpClient.GetAllAsync();
             ViewData["AutorId"] = new SelectList(autores, "Id", "Id", livroModel.AutorId);
             return View(livroModel);
         }
@@ -106,7 +107,7 @@ namespace ASDL20M3.Mvc2.Controllers
             {
                 try
                 {
-                    _livroService.Update(livroModel);
+                    await _livroHttpClient.UpdateAsync(livroModel);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -121,7 +122,7 @@ namespace ASDL20M3.Mvc2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            var autores = _autorService.GetAll();
+            var autores = await _autorHttpClient.GetAllAsync();
             ViewData["AutorId"] = new SelectList(autores, "Id", "Id", livroModel.AutorId);
             return View(livroModel);
         }
@@ -134,7 +135,7 @@ namespace ASDL20M3.Mvc2.Controllers
                 return NotFound();
             }
 
-            var livroModel = _livroService.GetById(id.Value);
+            var livroModel = await _livroHttpClient.GetByIdAsync(id.Value);
             if (livroModel == null)
             {
                 return NotFound();
@@ -148,19 +149,19 @@ namespace ASDL20M3.Mvc2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _livroService.Delete(id);
+            await _livroHttpClient.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool LivroModelExists(int id)
+        private async Task<bool> LivroModelExists(int id)
         {
-            return _livroService.GetById(id) != null;
+            return await _livroHttpClient.GetByIdAsync(id) != null;
         }
 
         [AcceptVerbs("GET", "POST")]
         public IActionResult CheckIsbn(string isbn, int id)
         {
-            if (!_livroService.CheckIsbn(isbn, id))
+            if (!_livroHttpClient.CheckIsbn(isbn, id))
             {
                 return Json($"ISBN {isbn} já está sendo usado.");
             }
