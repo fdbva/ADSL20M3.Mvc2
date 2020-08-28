@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using ASDL20M3.Mvc2.HttpServices;
 using Domain.Model.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ASDL20M3.Mvc2.Controllers
 {
@@ -45,7 +44,7 @@ namespace ASDL20M3.Mvc2.Controllers
             catch (HttpRequestException e) //Quando vem um status code diferente de "Successful" (200 Ok)
             {
                 Console.WriteLine(e);
-                return NotFound(e);
+                return NotFound(e.Message);
             }
             catch (NotSupportedException e) // When content type is not valid
             {
@@ -121,21 +120,7 @@ namespace ASDL20M3.Mvc2.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    var autorAtualizado = await _autorHttpClient.UpdateAsync(autorModel);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await AutorModelExists(autorModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _autorHttpClient.UpdateAsync(autorModel);
                 return RedirectToAction(nameof(Index));
             }
             return View(autorModel);

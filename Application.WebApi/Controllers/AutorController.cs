@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using Domain.Model.Exceptions;
 using Domain.Model.Interfaces.Services;
 using Domain.Model.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -66,27 +67,15 @@ namespace Application.WebApi.Controllers
 
             if (!ModelState.IsValid) 
                 return BadRequest("Existe algum valor inválido passado.");
-
-            var updatedModel = _autorService.Update(autorModel);
-
-            return Ok(updatedModel);
-
-            //TODO: Passar lógica de tratamento de erro para Infrastructure.Data
-            //try
-            //{
-            //    _autorService.Update(autorModel);
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!AutorModelExists(autorModel.Id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
+            try
+            {
+                var updatedModel = _autorService.Update(autorModel);
+                return Ok(updatedModel);
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]

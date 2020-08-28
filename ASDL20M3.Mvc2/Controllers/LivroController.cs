@@ -1,16 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using ASDL20M3.Mvc2.HttpServices;
-using Domain.Model.Interfaces.Services;
 using Domain.Model.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace ASDL20M3.Mvc2.Controllers
 {
-    //[Authorize(Policy = "Admin")]
+    [Authorize(Policy = "Admin")]
     public class LivroController : Controller
     {
         private readonly IAutorHttpClient _autorHttpClient;
@@ -105,21 +103,7 @@ namespace ASDL20M3.Mvc2.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    await _livroHttpClient.UpdateAsync(livroModel);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await LivroModelExists(livroModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _livroHttpClient.UpdateAsync(livroModel);
                 return RedirectToAction(nameof(Index));
             }
             var autores = await _autorHttpClient.GetAllAsync();

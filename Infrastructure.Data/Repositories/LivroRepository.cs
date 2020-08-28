@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Data.Infrastructure.Context;
+using Domain.Model.Exceptions;
 using Domain.Model.Interfaces.Repositories;
 using Domain.Model.Models;
 using Microsoft.EntityFrameworkCore;
@@ -41,8 +43,19 @@ namespace Data.Infrastructure.Repositories
 
         public LivroModel Update(LivroModel livroModel)
         {
-            _bibliotecaContext.Update(livroModel);
-            _bibliotecaContext.SaveChanges();
+            try
+            {
+                _bibliotecaContext.Update(livroModel);
+                _bibliotecaContext.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                var message = GetById(livroModel.Id) is null
+                    ? "Livro não encontrado na base de dados"
+                    : "Ocorreu um erro inesperado de concorrência. Tente novamente.";
+
+                throw new RepositoryException(message, ex);
+            }
 
             return livroModel;
         }
