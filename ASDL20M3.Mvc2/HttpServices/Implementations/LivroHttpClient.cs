@@ -77,11 +77,14 @@ namespace ASDL20M3.Mvc2.HttpServices.Implementations
             await _httpClient.DeleteAsync($"{id}");
         }
 
-        //TODO: CheckIsbn e Criar LivroController no WebApi
-        //public async Task<bool> CheckIsbn(string isbn, int id)
-        //{
-        //    var livros = await _httpClient
-        //        .GetFromJsonAsync<IEnumerable<LivroModel>>(string.Empty);
-        //}
+        public async Task<bool> CheckIsbn(string isbn, int id)
+        {
+            if (string.IsNullOrWhiteSpace(isbn))
+                return false;
+
+            var isIsbnValid = await _httpClient
+                .GetFromJsonAsync<bool>($"CheckIsbn/{isbn}/{id}");
+            return isIsbnValid;
+        }
     }
 }

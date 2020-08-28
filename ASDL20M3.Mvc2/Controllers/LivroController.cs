@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ASDL20M3.Mvc2.Controllers
 {
-    [Authorize(Policy = "Admin")]
+    //[Authorize(Policy = "Admin")]
     public class LivroController : Controller
     {
         private readonly IAutorHttpClient _autorHttpClient;
@@ -111,7 +111,7 @@ namespace ASDL20M3.Mvc2.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LivroModelExists(livroModel.Id))
+                    if (!await LivroModelExists(livroModel.Id))
                     {
                         return NotFound();
                     }
@@ -159,9 +159,9 @@ namespace ASDL20M3.Mvc2.Controllers
         }
 
         [AcceptVerbs("GET", "POST")]
-        public IActionResult CheckIsbn(string isbn, int id)
+        public async Task<IActionResult> CheckIsbn(string isbn, int id)
         {
-            if (!_livroHttpClient.CheckIsbn(isbn, id))
+            if (!await _livroHttpClient.CheckIsbn(isbn, id))
             {
                 return Json($"ISBN {isbn} já está sendo usado.");
             }

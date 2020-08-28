@@ -25,9 +25,6 @@ namespace ASDL20M3.Mvc2
             services.AddControllersWithViews();
             services.AddRazorPages(); //Auth
 
-            //Registro das dependências
-            services.RegisterDependencies(Configuration);
-
             services.AddHttpClient<IAutorHttpClient, AutorHttpClient>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44365/api/autor/");
