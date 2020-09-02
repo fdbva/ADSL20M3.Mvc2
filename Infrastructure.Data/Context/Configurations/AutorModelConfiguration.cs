@@ -26,6 +26,9 @@ namespace Infrastructure.Data.Context.Configurations
             builder
                 .Property(x => x.Nascimento)
                 .IsRequired();
+
+            builder
+                .Ignore(x => x.NomeCompletoId);
         }
     }
 }

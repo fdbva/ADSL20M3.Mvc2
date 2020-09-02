@@ -35,8 +35,17 @@ namespace Data.Infrastructure.Repositories
 
         public LivroModel Create(LivroModel livroModel)
         {
-            _bibliotecaContext.Add(livroModel);
+            var returnedLivroModel =
+            _bibliotecaContext
+                .Add(livroModel);
             _bibliotecaContext.SaveChanges();
+
+            //TODO: rever create se precisa do include
+            //returnedLivroModel
+            //    .Reference(x=>x.Autor)
+            //    .Load();
+
+            //return returnedLivroModel.Entity;
 
             return livroModel;
         }
