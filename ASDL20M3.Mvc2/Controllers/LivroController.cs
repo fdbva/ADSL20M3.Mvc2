@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ASDL20M3.Mvc2.Controllers
 {
-    [Authorize(Policy = "Admin")]
+    //[Authorize(Policy = "Admin")]
     public class LivroController : Controller
     {
         private readonly IAutorHttpClient _autorHttpClient;
@@ -50,7 +50,10 @@ namespace ASDL20M3.Mvc2.Controllers
         public async Task<IActionResult> Create()
         {
             var autores = await _autorHttpClient.GetAllAsync();
-            ViewData["AutorId"] = new SelectList(autores, "Id", "Id");
+            ViewData["AutorId"] = new SelectList(
+                autores, 
+                nameof(AutorModel.Id), 
+                nameof(AutorModel.NomeCompletoId));
             return View();
         }
 
@@ -59,7 +62,8 @@ namespace ASDL20M3.Mvc2.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Isbn,Titulo,Paginas,Lancamento,AutorId")] LivroModel livroModel)
+        public async Task<IActionResult> Create(
+            LivroModel livroModel)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +71,11 @@ namespace ASDL20M3.Mvc2.Controllers
                 return RedirectToAction(nameof(Index));
             }
             var autores = await _autorHttpClient.GetAllAsync();
-            ViewData["AutorId"] = new SelectList(autores, "Id", "Id", livroModel.AutorId);
+            ViewData["AutorId"] = new SelectList(
+                autores, 
+                nameof(AutorModel.Id), 
+                nameof(AutorModel.NomeCompletoId), 
+                livroModel.AutorId);
             return View(livroModel);
         }
 
@@ -85,7 +93,11 @@ namespace ASDL20M3.Mvc2.Controllers
                 return NotFound();
             }
             var autores = await _autorHttpClient.GetAllAsync();
-            ViewData["AutorId"] = new SelectList(autores, "Id", "Id", livroModel.AutorId);
+            ViewData["AutorId"] = new SelectList(
+                autores, 
+                nameof(AutorModel.Id), 
+                nameof(AutorModel.NomeCompletoId), 
+                livroModel.AutorId);
             return View(livroModel);
         }
 
@@ -94,7 +106,9 @@ namespace ASDL20M3.Mvc2.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Isbn,Titulo,Paginas,Lancamento,AutorId")] LivroModel livroModel)
+        public async Task<IActionResult> Edit(
+            int id, 
+            LivroModel livroModel)
         {
             if (id != livroModel.Id)
             {
@@ -107,7 +121,11 @@ namespace ASDL20M3.Mvc2.Controllers
                 return RedirectToAction(nameof(Index));
             }
             var autores = await _autorHttpClient.GetAllAsync();
-            ViewData["AutorId"] = new SelectList(autores, "Id", "Id", livroModel.AutorId);
+            ViewData["AutorId"] = new SelectList(
+                autores, 
+                nameof(AutorModel.Id), 
+                nameof(AutorModel.NomeCompletoId), 
+                livroModel.AutorId);
             return View(livroModel);
         }
 

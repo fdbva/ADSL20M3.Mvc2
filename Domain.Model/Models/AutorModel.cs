@@ -21,5 +21,7 @@ namespace Domain.Model.Models
 
         [JsonIgnore]
         public List<LivroModel> Livros { get; set; }
+
+        public string NomeCompletoId => $"{Nome} {UltimoNome} ({Id})";
     }
 }
