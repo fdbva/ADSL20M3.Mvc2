@@ -16,6 +16,12 @@ namespace Domain.Service.Services
             _autorRepository = autorRepository;
         }
 
+        /// <summary>
+        /// Exemplo de documentação para Create.
+        /// Ao criar, o banco vai gerar o Id via Identity (Sequence).
+        /// </summary>
+        /// <param name="autorModel">Deve vir sem Id preenchido.</param>
+        /// <returns>AutorModel original com o Id adicionado.</returns>
         public AutorModel Create(AutorModel autorModel)
         {
             return _autorRepository.Create(autorModel);

@@ -6,3 +6,18 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="Policy" asp-action="AddPolicyToEmail">
+            <div class="form-group">
+                <label for="email" class="control-label"></label>
+                <input id="email" name="email" type="email" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add Admin Policy" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

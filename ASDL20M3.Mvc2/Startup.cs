@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ASDL20M3.Mvc2.HttpServices;
+using ASDL20M3.Mvc2.HttpServices.Implementations;
+using Infrastructure.Crosscutting.IoC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Data.Infrastructure.Context;
-using Data.Infrastructure.Repositories;
-using Domain.Model.Interfaces.Repositories;
-using Domain.Model.Interfaces.Services;
-using Domain.Service.Services;
 
 namespace ASDL20M3.Mvc2
 {
@@ -30,13 +23,31 @@ namespace ASDL20M3.Mvc2
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddRazorPages(); //Auth
 
-            //Registro das dependências
-            services.AddScoped<IAutorService, AutorService>();
-            services.AddScoped<IAutorRepository, AutorRepository>();
+            services.AddHttpClient<IAutorHttpClient, AutorHttpClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44365/api/autor/");
+            });
 
-            services.AddDbContext<BibliotecaContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("BibliotecaContext")));
+            services.AddHttpClient<ILivroHttpClient, LivroHttpClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44365/api/livro/");
+            });
+
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    IConfigurationSection googleAuthNSection =
+                        Configuration.GetSection("Authentication:Google");
+
+                    options.ClientId = googleAuthNSection["ClientId"];
+                    options.ClientSecret = googleAuthNSection["ClientSecret"];
+                });
+
+            services.AddAuthorization(options =>
+                options.AddPolicy("Admin",
+                    policy => policy.RequireClaim("AdminClaim")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +68,7 @@ namespace ASDL20M3.Mvc2
 
             app.UseRouting();
 
+            app.UseAuthentication(); //Auth
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -64,6 +76,7 @@ namespace ASDL20M3.Mvc2
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages(); //Auth
             });
         }
     }

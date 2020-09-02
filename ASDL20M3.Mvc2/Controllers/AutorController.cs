@@ -1,44 +1,61 @@
-﻿using System.Threading.Tasks;
-using Domain.Model.Interfaces.Services;
+﻿using System;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+using ASDL20M3.Mvc2.HttpServices;
 using Domain.Model.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ASDL20M3.Mvc2.Controllers
 {
     public class AutorController : Controller
     {
-        private readonly IAutorService _autorService;
+        private readonly IAutorHttpClient _autorHttpClient;
 
         //Lembrar de registrar dependência no Startup.cs
         public AutorController(
-            IAutorService autorService)
+            IAutorHttpClient autorHttpClient)
         {
-            _autorService = autorService;
+            _autorHttpClient = autorHttpClient;
         }
 
         // GET: Autor
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var todosAutores = _autorService.GetAll();
-            return View(todosAutores);
+            var autores = await _autorHttpClient.GetAllAsync();
+
+            return View(autores);
         }
 
         // GET: Autor/Details/5
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var autorModel = _autorService.GetById(id.Value);
-            if (autorModel == null)
+            try
             {
-                return NotFound();
-            }
+                var autorModel = await _autorHttpClient.GetByIdAsync(id.Value);
 
-            return View(autorModel);
+                return View(autorModel);
+            }
+            catch (HttpRequestException e) //Quando vem um status code diferente de "Successful" (200 Ok)
+            {
+                Console.WriteLine(e);
+                return NotFound(e.Message);
+            }
+            catch (NotSupportedException e) // When content type is not valid
+            {
+                Console.WriteLine(e);
+                return NotFound(e);
+            }
+            catch (JsonException e) // Invalid JSON
+            {
+                Console.WriteLine("Invalid JSON.");
+                return NotFound(e);
+            }
         }
 
         // GET: Autor/Create
@@ -50,14 +67,24 @@ namespace ASDL20M3.Mvc2.Controllers
         // POST: Autor/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,UltimoNome,Nascimento")] AutorModel autorModel)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(AutorModel autorModel)
         {
             if (ModelState.IsValid)
             {
-                _autorService.Create(autorModel);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var autor = await _autorHttpClient.CreateAsync(autorModel);
+                    return RedirectToAction(nameof(Details), new { id = autor.Id });
+                }
+                catch (JsonException e)
+                {
+                    return View("Error");
+                }
+
+                //return RedirectToAction(nameof(Index));
             }
             return View(autorModel);
         }
@@ -70,7 +97,7 @@ namespace ASDL20M3.Mvc2.Controllers
                 return NotFound();
             }
 
-            var autorModel = _autorService.GetById(id.Value);
+            var autorModel = await _autorHttpClient.GetByIdAsync(id.Value);
             if (autorModel == null)
             {
                 return NotFound();
@@ -83,7 +110,8 @@ namespace ASDL20M3.Mvc2.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,Nome,UltimoNome,Nascimento")] AutorModel autorModel)
+        //[Authorize]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,UltimoNome,Nascimento")] AutorModel autorModel)
         {
             if (id != autorModel.Id)
             {
@@ -92,35 +120,21 @@ namespace ASDL20M3.Mvc2.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _autorService.Update(autorModel);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AutorModelExists(autorModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _autorHttpClient.UpdateAsync(autorModel);
                 return RedirectToAction(nameof(Index));
             }
             return View(autorModel);
         }
 
         // GET: Autor/Delete/5
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var autorModel = _autorService.GetById(id.Value);
+            var autorModel = await _autorHttpClient.GetByIdAsync(id.Value);
             if (autorModel == null)
             {
                 return NotFound();
@@ -130,17 +144,18 @@ namespace ASDL20M3.Mvc2.Controllers
         }
 
         // POST: Autor/Delete/5
+        //[Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _autorService.Delete(id);
+            await _autorHttpClient.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AutorModelExists(int id)
+        private async Task<bool> AutorModelExists(int id)
         {
-            var autorEncontrado = _autorService.GetById(id);
+            var autorEncontrado = await _autorHttpClient.GetByIdAsync(id);
             return autorEncontrado != null;
         }
     }
