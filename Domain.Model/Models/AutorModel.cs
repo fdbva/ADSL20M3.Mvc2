@@ -19,7 +19,7 @@ namespace Domain.Model.Models
         [DataType(DataType.Date)]
         public DateTime Nascimento { get; set; }
 
-        [JsonIgnore]
+        //[JsonIgnore]
         public List<LivroModel> Livros { get; set; }
 
         public string NomeCompletoId => $"{Nome} {UltimoNome} ({Id})";

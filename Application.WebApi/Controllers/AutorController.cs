@@ -24,6 +24,7 @@ namespace Application.WebApi.Controllers
         public IActionResult OnGet()
         {
             var todosAutores = _autorService.GetAll();
+
             return Ok(todosAutores);
         }
 

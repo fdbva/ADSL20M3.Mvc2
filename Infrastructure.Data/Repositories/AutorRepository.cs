@@ -21,12 +21,18 @@ namespace Data.Infrastructure.Repositories
 
         public IEnumerable<AutorModel> GetAll()
         {
-            return _bibliotecaContext.Autores.AsEnumerable();
+            return _bibliotecaContext
+                .Autores
+                .Include(x => x.Livros)
+                .AsEnumerable();
         }
 
         public AutorModel GetById(int id)
         {
-            return _bibliotecaContext.Autores.FirstOrDefault(x => x.Id == id);
+            return _bibliotecaContext
+                .Autores
+                .Include(x => x.Livros)
+                .FirstOrDefault(x => x.Id == id);
         }
 
         public AutorModel Create(AutorModel autorModel)
