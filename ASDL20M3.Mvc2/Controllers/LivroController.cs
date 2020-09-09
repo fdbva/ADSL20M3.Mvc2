@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using ASDL20M3.Mvc2.HttpServices;
-using Domain.Model.Models;
+using ASDL20M3.Mvc2.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -37,13 +37,13 @@ namespace ASDL20M3.Mvc2.Controllers
                 return NotFound();
             }
 
-            var livroModel = await _livroHttpClient.GetByIdAsync(id.Value);
-            if (livroModel == null)
+            var livroViewModel = await _livroHttpClient.GetByIdAsync(id.Value);
+            if (livroViewModel == null)
             {
                 return NotFound();
             }
 
-            return View(livroModel);
+            return View(livroViewModel);
         }
 
         // GET: Livro/Create
@@ -52,8 +52,9 @@ namespace ASDL20M3.Mvc2.Controllers
             var autores = await _autorHttpClient.GetAllAsync();
             ViewData["AutorId"] = new SelectList(
                 autores, 
-                nameof(AutorModel.Id), 
-                nameof(AutorModel.NomeCompletoId));
+                nameof(AutorViewModel.Id), 
+                nameof(AutorViewModel.NomeCompletoId),
+                null);
             return View();
         }
 
@@ -63,20 +64,20 @@ namespace ASDL20M3.Mvc2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            LivroModel livroModel)
+            LivroViewModel livroViewModel)
         {
             if (ModelState.IsValid)
             {
-                await _livroHttpClient.CreateAsync(livroModel);
+                await _livroHttpClient.CreateAsync(livroViewModel);
                 return RedirectToAction(nameof(Index));
             }
             var autores = await _autorHttpClient.GetAllAsync();
             ViewData["AutorId"] = new SelectList(
                 autores, 
-                nameof(AutorModel.Id), 
-                nameof(AutorModel.NomeCompletoId), 
-                livroModel.AutorId);
-            return View(livroModel);
+                nameof(AutorViewModel.Id), 
+                nameof(AutorViewModel.NomeCompletoId), 
+                livroViewModel.AutorId);
+            return View(livroViewModel);
         }
 
         // GET: Livro/Edit/5
@@ -87,18 +88,18 @@ namespace ASDL20M3.Mvc2.Controllers
                 return NotFound();
             }
 
-            var livroModel = await _livroHttpClient.GetByIdAsync(id.Value);
-            if (livroModel == null)
+            var livroViewModel = await _livroHttpClient.GetByIdAsync(id.Value);
+            if (livroViewModel == null)
             {
                 return NotFound();
             }
             var autores = await _autorHttpClient.GetAllAsync();
             ViewData["AutorId"] = new SelectList(
                 autores, 
-                nameof(AutorModel.Id), 
-                nameof(AutorModel.NomeCompletoId), 
-                livroModel.AutorId);
-            return View(livroModel);
+                nameof(AutorViewModel.Id), 
+                nameof(AutorViewModel.NomeCompletoId), 
+                livroViewModel.AutorId);
+            return View(livroViewModel);
         }
 
         // POST: Livro/Edit/5
@@ -108,25 +109,25 @@ namespace ASDL20M3.Mvc2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
             int id, 
-            LivroModel livroModel)
+            LivroViewModel livroViewModel)
         {
-            if (id != livroModel.Id)
+            if (id != livroViewModel.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                await _livroHttpClient.UpdateAsync(livroModel);
+                await _livroHttpClient.UpdateAsync(livroViewModel);
                 return RedirectToAction(nameof(Index));
             }
             var autores = await _autorHttpClient.GetAllAsync();
             ViewData["AutorId"] = new SelectList(
                 autores, 
-                nameof(AutorModel.Id), 
-                nameof(AutorModel.NomeCompletoId), 
-                livroModel.AutorId);
-            return View(livroModel);
+                nameof(AutorViewModel.Id), 
+                nameof(AutorViewModel.NomeCompletoId), 
+                livroViewModel.AutorId);
+            return View(livroViewModel);
         }
 
         // GET: Livro/Delete/5
@@ -137,13 +138,13 @@ namespace ASDL20M3.Mvc2.Controllers
                 return NotFound();
             }
 
-            var livroModel = await _livroHttpClient.GetByIdAsync(id.Value);
-            if (livroModel == null)
+            var livroViewModel = await _livroHttpClient.GetByIdAsync(id.Value);
+            if (livroViewModel == null)
             {
                 return NotFound();
             }
 
-            return View(livroModel);
+            return View(livroViewModel);
         }
 
         // POST: Livro/Delete/5
@@ -155,7 +156,7 @@ namespace ASDL20M3.Mvc2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> LivroModelExists(int id)
+        private async Task<bool> LivroViewModelExists(int id)
         {
             return await _livroHttpClient.GetByIdAsync(id) != null;
         }

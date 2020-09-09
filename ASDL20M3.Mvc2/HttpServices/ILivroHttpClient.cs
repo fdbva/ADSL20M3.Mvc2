@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Domain.Model.Models;
+using ASDL20M3.Mvc2.Models;
 
 namespace ASDL20M3.Mvc2.HttpServices
 {
     public interface ILivroHttpClient
     {
-        Task<IEnumerable<LivroModel>> GetAllAsync();
-        Task<LivroModel> GetByIdAsync(int id);
-        Task<LivroModel> CreateAsync(LivroModel livroModel);
-        Task<LivroModel> UpdateAsync(LivroModel livroModel);
+        Task<IEnumerable<LivroViewModel>> GetAllAsync();
+        Task<LivroViewModel> GetByIdAsync(int id);
+        Task<LivroViewModel> CreateAsync(LivroViewModel livroModel);
+        Task<LivroViewModel> UpdateAsync(LivroViewModel livroModel);
         Task DeleteAsync(int id);
         Task<bool> CheckIsbn(string isbn, int id);
     }

@@ -43,11 +43,11 @@ namespace Application.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult OnPost([FromBody] LivroModel livroModel)
+        public IActionResult OnPost([FromBody] LivroAutorAggregateModel livroAggregateModel)
         {
             if (ModelState.IsValid)
             {
-                var livroCriado = _livroService.Create(livroModel);
+                var livroCriado = _livroService.Create(livroAggregateModel);
 
                 return Ok(livroCriado);
             }
