@@ -38,7 +38,6 @@ namespace Data.Infrastructure.Repositories
         public AutorModel Create(AutorModel autorModel)
         {
             _bibliotecaContext.Add(autorModel);
-            _bibliotecaContext.SaveChanges();
 
             return autorModel;
         }
@@ -50,7 +49,6 @@ namespace Data.Infrastructure.Repositories
             try
             {
                 _bibliotecaContext.Update(autorModel);
-                _bibliotecaContext.SaveChanges();
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -68,7 +66,6 @@ namespace Data.Infrastructure.Repositories
         {
             var autorModel = GetById(id);
             _bibliotecaContext.Remove(autorModel);
-            _bibliotecaContext.SaveChanges();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace ASDL20M3.Mvc2.HttpServices
     {
         Task<IEnumerable<LivroViewModel>> GetAllAsync();
         Task<LivroViewModel> GetByIdAsync(int id);
-        Task<LivroViewModel> CreateAsync(LivroViewModel livroModel);
+        Task<LivroViewModel> CreateAsync(LivroAutorAggregateRequest livroAutorAggregateRequest);
         Task<LivroViewModel> UpdateAsync(LivroViewModel livroModel);
         Task DeleteAsync(int id);
         Task<bool> CheckIsbn(string isbn, int id);

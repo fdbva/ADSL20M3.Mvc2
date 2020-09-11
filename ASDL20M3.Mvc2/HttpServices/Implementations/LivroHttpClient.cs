@@ -34,10 +34,11 @@ namespace ASDL20M3.Mvc2.HttpServices.Implementations
             return livroViewModel;
         }
 
-        public async Task<LivroViewModel> CreateAsync(LivroViewModel livroViewModel)
+        public async Task<LivroViewModel> CreateAsync(
+            LivroAutorAggregateRequest livroAutorAggregateRequest)
         {
             var httpResponseMessage = await _httpClient
-                .PostAsJsonAsync(string.Empty, livroViewModel);
+                .PostAsJsonAsync(string.Empty, livroAutorAggregateRequest);
 
             var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 

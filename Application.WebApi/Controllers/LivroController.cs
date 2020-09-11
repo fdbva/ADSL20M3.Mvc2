@@ -1,5 +1,6 @@
 ﻿using System;
 using Domain.Model.Interfaces.Services;
+using Domain.Model.Interfaces.UoW;
 using Domain.Model.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +11,15 @@ namespace Application.WebApi.Controllers
     public class LivroController : ControllerBase
     {
         private readonly ILivroService _livroService;
+        private readonly IUnitOfWork _unitOfWork;
 
         //Lembrar de registrar dependência no Startup.cs
         public LivroController(
-            ILivroService livroService)
+            ILivroService livroService,
+            IUnitOfWork unitOfWork)
         {
             _livroService = livroService;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -47,7 +51,9 @@ namespace Application.WebApi.Controllers
         {
             if (ModelState.IsValid)
             {
+                _unitOfWork.BeginTransaction();
                 var livroCriado = _livroService.Create(livroAggregateModel);
+                _unitOfWork.Commit();
 
                 return Ok(livroCriado);
             }
@@ -68,7 +74,9 @@ namespace Application.WebApi.Controllers
 
             try
             {
+                _unitOfWork.BeginTransaction();
                 var updatedModel = _livroService.Update(livroModel);
+                _unitOfWork.Commit();
 
                 return Ok(updatedModel);
             }
@@ -81,7 +89,10 @@ namespace Application.WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult OnDelete(int id)
         {
+            _unitOfWork.BeginTransaction();
             _livroService.Delete(id);
+            _unitOfWork.Commit();
+
             return Ok();
         }
 

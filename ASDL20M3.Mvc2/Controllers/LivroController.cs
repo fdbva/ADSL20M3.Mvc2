@@ -64,20 +64,23 @@ namespace ASDL20M3.Mvc2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            LivroViewModel livroViewModel)
+            LivroAutorCreateViewModel livroAutorCreateViewModel)
         {
             if (ModelState.IsValid)
             {
-                await _livroHttpClient.CreateAsync(livroViewModel);
+                var livroAutorAggregateViewModel = 
+                    new LivroAutorAggregateRequest(livroAutorCreateViewModel);
+
+                await _livroHttpClient.CreateAsync(livroAutorAggregateViewModel);
                 return RedirectToAction(nameof(Index));
             }
             var autores = await _autorHttpClient.GetAllAsync();
             ViewData["AutorId"] = new SelectList(
                 autores, 
                 nameof(AutorViewModel.Id), 
-                nameof(AutorViewModel.NomeCompletoId), 
-                livroViewModel.AutorId);
-            return View(livroViewModel);
+                nameof(AutorViewModel.NomeCompletoId),
+                livroAutorCreateViewModel.AutorId);
+            return View(livroAutorCreateViewModel);
         }
 
         // GET: Livro/Edit/5

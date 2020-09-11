@@ -1,4 +1,4 @@
-﻿@model LivroAutorAggregateViewModel
+﻿@model LivroAutorCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -14,29 +14,29 @@
             <h4>Livro</h4>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Livro.Isbn" class="control-label"></label>
-                <input asp-for="Livro.Isbn" class="form-control"/>
-                <span asp-validation-for="Livro.Isbn" class="text-danger"></span>
+                <label asp-for="Isbn" class="control-label"></label>
+                <input asp-for="Isbn" class="form-control" />
+                <span asp-validation-for="Isbn" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Livro.Titulo" class="control-label"></label>
-                <input asp-for="Livro.Titulo" class="form-control"/>
-                <span asp-validation-for="Livro.Titulo" class="text-danger"></span>
+                <label asp-for="Titulo" class="control-label"></label>
+                <input asp-for="Titulo" class="form-control" />
+                <span asp-validation-for="Titulo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Livro.Paginas" class="control-label"></label>
-                <input asp-for="Livro.Paginas" class="form-control"/>
-                <span asp-validation-for="Livro.Paginas" class="text-danger"></span>
+                <label asp-for="Paginas" class="control-label"></label>
+                <input asp-for="Paginas" class="form-control" />
+                <span asp-validation-for="Paginas" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Livro.Lancamento" class="control-label"></label>
-                <input asp-for="Livro.Lancamento" class="form-control"/>
-                <span asp-validation-for="Livro.Lancamento" class="text-danger"></span>
+                <label asp-for="Lancamento" class="control-label"></label>
+                <input asp-for="Lancamento" class="form-control" />
+                <span asp-validation-for="Lancamento" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Livro.AutorId" class="control-label"></label>
-                <select asp-for="Livro.AutorId" class="form-control" asp-items="ViewBag.AutorId">
-                    <option selected>Criar novo Autor</option>
+                <label asp-for="AutorId" class="control-label"></label>
+                <select asp-for="AutorId" class="form-control" asp-items="ViewBag.AutorId">
+                    <option selected value="">Criar novo Autor</option>
                 </select>
             </div>
         </div>
@@ -44,19 +44,19 @@
             <h4>Autor</h4>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Autor.Nome" class="control-label"></label>
-                <input asp-for="Autor.Nome" class="form-control" />
-                <span asp-validation-for="Autor.Nome" class="text-danger"></span>
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Autor.UltimoNome" class="control-label"></label>
-                <input asp-for="Autor.UltimoNome" class="form-control" />
-                <span asp-validation-for="Autor.UltimoNome" class="text-danger"></span>
+                <label asp-for="UltimoNome" class="control-label"></label>
+                <input asp-for="UltimoNome" class="form-control" />
+                <span asp-validation-for="UltimoNome" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Autor.Nascimento" class="control-label"></label>
-                <input asp-for="Autor.Nascimento" class="form-control" />
-                <span asp-validation-for="Autor.Nascimento" class="text-danger"></span>
+                <label asp-for="Nascimento" class="control-label"></label>
+                <input asp-for="Nascimento" class="form-control" />
+                <span asp-validation-for="Nascimento" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -71,4 +71,18 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+    const autorSelect = document.getElementById("AutorId");
+    const nomeElement = document.getElementById("Nome");
+    const ultimoNomeElement = document.getElementById("UltimoNome");
+    const nascimentoElement = document.getElementById("Nascimento");
+
+    autorSelect.onchange = () => {
+        const disabled = autorSelect.value !== "";
+
+        nomeElement.disabled = disabled;
+        ultimoNomeElement.disabled = disabled;
+        nascimentoElement.disabled = disabled;
+    };
+</script>
 }

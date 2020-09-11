@@ -36,16 +36,16 @@ namespace Domain.Service.Services
                 return _livroRepository.Create(livroAutorAggregateModel.Livro);
             }
 
-            using var transactionScope = new TransactionScope() ; //TransactionScopeAsyncFlowOption.Enabled);
-
+            //Exemplo com transaction sem UnitOfWork e SaveChanges nos Repositories
+            //using var transactionScope = new TransactionScope(); //TransactionScopeAsyncFlowOption.Enabled);
             var autor = _autorRepository.Create(livroAutorAggregateModel.Autor);
 
-            livroAutorAggregateModel.Livro.AutorId = autor.Id;
+            livroAutorAggregateModel.Livro.Autor = autor; //Com Transaction, usar AutorId
 
             var livro = _livroRepository.Create(livroAutorAggregateModel.Livro);
 
-            transactionScope.Complete();
-
+            //Exemplo com transaction sem UnitOfWork e SaveChanges nos Repositories
+            //transactionScope.Complete();
             return livro;
         }
 
