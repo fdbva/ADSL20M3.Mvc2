@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Domain.Model.Models;
+using ASDL20M3.Mvc2.Models;
 
 namespace ASDL20M3.Mvc2.HttpServices.Implementations
 {
@@ -18,31 +18,31 @@ namespace ASDL20M3.Mvc2.HttpServices.Implementations
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<AutorModel>> GetAllAsync()
+        public async Task<IEnumerable<AutorViewModel>> GetAllAsync()
         {
             var autores = await _httpClient
-                .GetFromJsonAsync<IEnumerable<AutorModel>>(string.Empty);
+                .GetFromJsonAsync<IEnumerable<AutorViewModel>>(string.Empty);
 
             return autores;
         }
 
-        public async Task<AutorModel> GetByIdAsync(int id)
+        public async Task<AutorViewModel> GetByIdAsync(int id)
         {
-            var autorModel = await _httpClient
-                .GetFromJsonAsync<AutorModel>($"{id}");
+            var autorViewModel = await _httpClient
+                .GetFromJsonAsync<AutorViewModel>($"{id}");
 
-            return autorModel;
+            return autorViewModel;
         }
 
-        public async Task<AutorModel> CreateAsync(AutorModel autorModel)
+        public async Task<AutorViewModel> CreateAsync(AutorViewModel autorViewModel)
         {
             var httpResponseMessage = await _httpClient
-                .PostAsJsonAsync(string.Empty, autorModel);
+                .PostAsJsonAsync(string.Empty, autorViewModel);
 
             var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
             var autorResponse = await JsonSerializer
-                .DeserializeAsync<AutorModel>(
+                .DeserializeAsync<AutorViewModel>(
                     contentStream,
                     new JsonSerializerOptions
                     {
@@ -53,15 +53,15 @@ namespace ASDL20M3.Mvc2.HttpServices.Implementations
             return autorResponse;
         }
 
-        public async Task<AutorModel> UpdateAsync(AutorModel autorModel)
+        public async Task<AutorViewModel> UpdateAsync(AutorViewModel autorViewModel)
         {
             var httpResponseMessage = await _httpClient
-                .PutAsJsonAsync($"{autorModel.Id}", autorModel);
+                .PutAsJsonAsync($"{autorViewModel.Id}", autorViewModel);
 
             var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
             var autorResponse = await JsonSerializer
-                .DeserializeAsync<AutorModel>(
+                .DeserializeAsync<AutorViewModel>(
                     contentStream,
                     new JsonSerializerOptions
                     {

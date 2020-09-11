@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AutorModel>
+﻿@model IEnumerable<AutorViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -21,27 +21,38 @@
             <th>
                 @Html.DisplayNameFor(model => model.Nascimento)
             </th>
+            <th>QtdLivros</th>
+            <th>NomesLivros</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UltimoNome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nascimento)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var autorModel in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => autorModel.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => autorModel.UltimoNome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => autorModel.Nascimento)
+                </td>
+                <td>
+                    @*recomendado usar um ViewModel e não colocar essa lógica aqui*@
+                    @autorModel.Livros.Count
+                </td>
+                <td>
+                    @*recomendado usar um ViewModel e não colocar essa lógica aqui*@
+                    @string.Join(", ", autorModel.Livros.Select(x => x.Titulo))
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@autorModel.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@autorModel.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@autorModel.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

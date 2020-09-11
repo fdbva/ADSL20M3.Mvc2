@@ -1,4 +1,4 @@
-﻿@model Domain.Model.Models.LivroModel
+﻿@model LivroAutorCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -8,9 +8,10 @@
 
 <h4>LivroModel</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<form asp-action="Create" class="col-md-12">
+    <div class="row justify-content-around">
+        <div class="col-md-5">
+            <h4>Livro</h4>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Isbn" class="control-label"></label>
@@ -34,14 +35,35 @@
             </div>
             <div class="form-group">
                 <label asp-for="AutorId" class="control-label"></label>
-                <select asp-for="AutorId" class ="form-control" asp-items="ViewBag.AutorId"></select>
+                <select asp-for="AutorId" class="form-control" asp-items="ViewBag.AutorId">
+                    <option selected value="">Criar novo Autor</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <h4>Autor</h4>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UltimoNome" class="control-label"></label>
+                <input asp-for="UltimoNome" class="form-control" />
+                <span asp-validation-for="UltimoNome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nascimento" class="control-label"></label>
+                <input asp-for="Nascimento" class="form-control" />
+                <span asp-validation-for="Nascimento" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
 <div>
     <a asp-action="Index">Back to List</a>
@@ -49,4 +71,18 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+    const autorSelect = document.getElementById("AutorId");
+    const nomeElement = document.getElementById("Nome");
+    const ultimoNomeElement = document.getElementById("UltimoNome");
+    const nascimentoElement = document.getElementById("Nascimento");
+
+    autorSelect.onchange = () => {
+        const disabled = autorSelect.value !== "";
+
+        nomeElement.disabled = disabled;
+        ultimoNomeElement.disabled = disabled;
+        nascimentoElement.disabled = disabled;
+    };
+</script>
 }

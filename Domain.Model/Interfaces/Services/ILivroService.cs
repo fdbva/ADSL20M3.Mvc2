@@ -7,7 +7,7 @@ namespace Domain.Model.Interfaces.Services
     {
         IEnumerable<LivroModel> GetAll();
         LivroModel GetById(int id);
-        LivroModel Create(LivroModel livroModel);
+        LivroModel Create(LivroAutorAggregateModel livroModel);
         LivroModel Update(LivroModel livroModel);
         void Delete(int id);
         bool CheckIsbn(string isbn, int id);

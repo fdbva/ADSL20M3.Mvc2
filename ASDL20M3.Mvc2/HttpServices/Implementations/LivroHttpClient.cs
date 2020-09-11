@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Domain.Model.Models;
+using ASDL20M3.Mvc2.Models;
 
 namespace ASDL20M3.Mvc2.HttpServices.Implementations
 {
@@ -18,31 +18,32 @@ namespace ASDL20M3.Mvc2.HttpServices.Implementations
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<LivroModel>> GetAllAsync()
+        public async Task<IEnumerable<LivroViewModel>> GetAllAsync()
         {
             var livros = await _httpClient
-                .GetFromJsonAsync<IEnumerable<LivroModel>>(string.Empty);
+                .GetFromJsonAsync<IEnumerable<LivroViewModel>>(string.Empty);
 
             return livros;
         }
 
-        public async Task<LivroModel> GetByIdAsync(int id)
+        public async Task<LivroViewModel> GetByIdAsync(int id)
         {
-            var livroModel = await _httpClient
-                .GetFromJsonAsync<LivroModel>($"{id}");
+            var livroViewModel = await _httpClient
+                .GetFromJsonAsync<LivroViewModel>($"{id}");
 
-            return livroModel;
+            return livroViewModel;
         }
 
-        public async Task<LivroModel> CreateAsync(LivroModel livroModel)
+        public async Task<LivroViewModel> CreateAsync(
+            LivroAutorAggregateRequest livroAutorAggregateRequest)
         {
             var httpResponseMessage = await _httpClient
-                .PostAsJsonAsync(string.Empty, livroModel);
+                .PostAsJsonAsync(string.Empty, livroAutorAggregateRequest);
 
             var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
             var livroResponse = await JsonSerializer
-                .DeserializeAsync<LivroModel>(
+                .DeserializeAsync<LivroViewModel>(
                     contentStream,
                     new JsonSerializerOptions
                     {
@@ -53,15 +54,15 @@ namespace ASDL20M3.Mvc2.HttpServices.Implementations
             return livroResponse;
         }
 
-        public async Task<LivroModel> UpdateAsync(LivroModel livroModel)
+        public async Task<LivroViewModel> UpdateAsync(LivroViewModel livroViewModel)
         {
             var httpResponseMessage = await _httpClient
-                .PutAsJsonAsync($"{livroModel.Id}", livroModel);
+                .PutAsJsonAsync($"{livroViewModel.Id}", livroViewModel);
 
             var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
             var livroResponse = await JsonSerializer
-                .DeserializeAsync<LivroModel>(
+                .DeserializeAsync<LivroViewModel>(
                     contentStream,
                     new JsonSerializerOptions
                     {

@@ -6,9 +6,10 @@ namespace Data.Infrastructure.Context
 {
     //Lembrar de selecionar default project no Dropdown
 
-    //Add-Migration -context BibliotecaContext
+    //Add-Migration [nome] -context BibliotecaContext
 
     //Update-database -context BibliotecaContext
+    //update-database -context BibliotecaContext -StartupProject Application.WebApi
     public class BibliotecaContext : DbContext
     {
         public BibliotecaContext(DbContextOptions<BibliotecaContext> options)

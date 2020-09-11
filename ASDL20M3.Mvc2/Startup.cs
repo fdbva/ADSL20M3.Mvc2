@@ -1,7 +1,6 @@
 ﻿using System;
 using ASDL20M3.Mvc2.HttpServices;
 using ASDL20M3.Mvc2.HttpServices.Implementations;
-using Infrastructure.Crosscutting.IoC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

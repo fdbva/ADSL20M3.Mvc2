@@ -1,4 +1,4 @@
-﻿@model AutorModel
+﻿@model AutorViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -10,25 +10,75 @@
     <h4>AutorModel</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Nome)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Nome)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UltimoNome)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.UltimoNome)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Nascimento)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Nascimento)
         </dd>
     </dl>
+    <hr />
+    @if (Model.Livros.Count > 0)
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    @nameof(LivroViewModel.Isbn)
+                </th>
+                <th>
+                    @nameof(LivroViewModel.Titulo)
+                </th>
+                <th>
+                    @nameof(LivroViewModel.Paginas)
+                </th>
+                <th>
+                    @nameof(LivroViewModel.Lancamento)
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Livros) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Isbn)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Titulo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Paginas)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Lancamento)
+                    </td>
+                    <td>
+                        <a asp-controller="Livro" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-controller="Livro" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-controller="Livro" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Esse autor não possui livros cadastrados.</p>
+    }
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

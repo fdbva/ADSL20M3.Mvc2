@@ -38,7 +38,6 @@ namespace Data.Infrastructure.Repositories
             var returnedLivroModel =
             _bibliotecaContext
                 .Add(livroModel);
-            _bibliotecaContext.SaveChanges();
 
             //TODO: rever create se precisa do include
             //returnedLivroModel
@@ -55,7 +54,6 @@ namespace Data.Infrastructure.Repositories
             try
             {
                 _bibliotecaContext.Update(livroModel);
-                _bibliotecaContext.SaveChanges();
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -73,7 +71,6 @@ namespace Data.Infrastructure.Repositories
         {
             var livroModel = GetById(id);
             _bibliotecaContext.Remove(livroModel);
-            _bibliotecaContext.SaveChanges();
         }
 
         public LivroModel GetIsbnNotFromThisId(string isbn, int id)
