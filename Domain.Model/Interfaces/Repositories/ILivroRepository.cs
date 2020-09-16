@@ -5,7 +5,8 @@ namespace Domain.Model.Interfaces.Repositories
 {
     public interface ILivroRepository
     {
-        IEnumerable<LivroModel> GetAll();
+        IEnumerable<LivroModel> GetAll(
+            string searchText);
         LivroModel GetById(int id);
         LivroModel Create(LivroModel livroModel);
         LivroModel Update(LivroModel livroModel);

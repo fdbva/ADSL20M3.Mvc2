@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ASDL20M3.Mvc2.HttpServices;
 using ASDL20M3.Mvc2.Models;
@@ -23,10 +24,14 @@ namespace ASDL20M3.Mvc2.Controllers
         }
 
         // GET: Livro
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string searchText)
         {
-            var bibliotecaContext = await _livroHttpClient.GetAllAsync();
-            return View(bibliotecaContext.ToList());
+            var livros = await _livroHttpClient.GetAllAsync(searchText);
+
+            ViewBag.SearchText = searchText;
+
+            return View(livros.ToList());
         }
 
         // GET: Livro/Details/5

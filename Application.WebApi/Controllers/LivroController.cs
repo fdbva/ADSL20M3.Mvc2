@@ -22,14 +22,14 @@ namespace Application.WebApi.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet]
-        public IActionResult OnGet()
+        [HttpGet("{searchText?}")]
+        public IActionResult OnGet(string searchText)
         {
-            var todosLivros = _livroService.GetAll();
+            var todosLivros = _livroService.GetAll(searchText);
             return Ok(todosLivros);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         public IActionResult OnGet(int? id)
         {
             if (id == null)

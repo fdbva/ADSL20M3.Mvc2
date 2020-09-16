@@ -19,9 +19,10 @@ namespace Domain.Service.Services
             _livroRepository = livroRepository;
         }
 
-        public IEnumerable<LivroModel> GetAll()
+        public IEnumerable<LivroModel> GetAll(
+            string searchText)
         {
-            return _livroRepository.GetAll();
+            return _livroRepository.GetAll(searchText);
         }
 
         public LivroModel GetById(int id)

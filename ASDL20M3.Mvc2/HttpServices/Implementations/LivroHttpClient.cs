@@ -18,10 +18,11 @@ namespace ASDL20M3.Mvc2.HttpServices.Implementations
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<LivroViewModel>> GetAllAsync()
+        public async Task<IEnumerable<LivroViewModel>> GetAllAsync(
+            string searchText)
         {
             var livros = await _httpClient
-                .GetFromJsonAsync<IEnumerable<LivroViewModel>>(string.Empty);
+                .GetFromJsonAsync<IEnumerable<LivroViewModel>>(searchText);
 
             return livros;
         }
@@ -29,7 +30,7 @@ namespace ASDL20M3.Mvc2.HttpServices.Implementations
         public async Task<LivroViewModel> GetByIdAsync(int id)
         {
             var livroViewModel = await _httpClient
-                .GetFromJsonAsync<LivroViewModel>($"{id}");
+                .GetFromJsonAsync<LivroViewModel>($"GetById/{id}");
 
             return livroViewModel;
         }

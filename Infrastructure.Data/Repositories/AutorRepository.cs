@@ -21,6 +21,8 @@ namespace Data.Infrastructure.Repositories
 
         public IEnumerable<AutorModel> GetAll()
         {
+            var a = new List<int>();
+
             return _bibliotecaContext
                 .Autores
                 .Include(x => x.Livros)

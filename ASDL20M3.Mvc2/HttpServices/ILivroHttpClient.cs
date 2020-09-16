@@ -6,7 +6,8 @@ namespace ASDL20M3.Mvc2.HttpServices
 {
     public interface ILivroHttpClient
     {
-        Task<IEnumerable<LivroViewModel>> GetAllAsync();
+        Task<IEnumerable<LivroViewModel>> GetAllAsync(
+            string searchText);
         Task<LivroViewModel> GetByIdAsync(int id);
         Task<LivroViewModel> CreateAsync(LivroAutorAggregateRequest livroAutorAggregateRequest);
         Task<LivroViewModel> UpdateAsync(LivroViewModel livroModel);

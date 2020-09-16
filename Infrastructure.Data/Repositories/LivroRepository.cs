@@ -19,11 +19,16 @@ namespace Data.Infrastructure.Repositories
             _bibliotecaContext = bibliotecaContext;
         }
 
-        public IEnumerable<LivroModel> GetAll()
+        public IEnumerable<LivroModel> GetAll(
+            string searchText)
         {
-            return _bibliotecaContext
+            var livros = _bibliotecaContext
                 .Livros
                 .Include(l => l.Autor);
+
+            return string.IsNullOrWhiteSpace(searchText)
+                ? livros
+                : livros.Where(x => x.Titulo == searchText);
         }
 
         public LivroModel GetById(int id)
