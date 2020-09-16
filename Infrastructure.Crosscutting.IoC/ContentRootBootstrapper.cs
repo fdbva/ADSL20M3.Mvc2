@@ -1,9 +1,13 @@
-﻿using Data.Infrastructure.Context;
+﻿using Application.AppServices;
+using Application.AppServices.Implementations;
+using AutoMapper;
+using Data.Infrastructure.Context;
 using Data.Infrastructure.Repositories;
 using Domain.Model.Interfaces.Repositories;
 using Domain.Model.Interfaces.Services;
 using Domain.Model.Interfaces.UoW;
 using Domain.Service.Services;
+using Infrastructure.Crosscutting.IoC.MappingConfig;
 using Infrastructure.Data.UoW;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,9 +24,13 @@ namespace Infrastructure.Crosscutting.IoC
             services.AddDbContext<BibliotecaContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("BibliotecaContext")));
 
+            services.AddAutoMapper(typeof(MappingProfiles));
+
             //Registro das dependências
+            services.AddScoped<IAutorAppService, AutorAppService>();
             services.AddScoped<IAutorService, AutorService>();
             services.AddScoped<IAutorRepository, AutorRepository>();
+            services.AddScoped<ILivroAppService, LivroAppService>();
             services.AddScoped<ILivroService, LivroService>();
             services.AddScoped<ILivroRepository, LivroRepository>();
 

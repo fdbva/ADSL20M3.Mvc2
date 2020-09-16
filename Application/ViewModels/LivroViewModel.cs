@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ASDL20M3.Mvc2.Models
+namespace Application.ViewModels
 {
     public class LivroViewModel
     {

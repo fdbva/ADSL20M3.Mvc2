@@ -1,6 +1,5 @@
-﻿using System;
-using ASDL20M3.Mvc2.HttpServices;
-using ASDL20M3.Mvc2.HttpServices.Implementations;
+﻿using AutoMapper;
+using Infrastructure.Crosscutting.IoC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,15 +23,7 @@ namespace ASDL20M3.Mvc2
             services.AddControllersWithViews();
             services.AddRazorPages(); //Auth
 
-            services.AddHttpClient<IAutorHttpClient, AutorHttpClient>(client =>
-            {
-                client.BaseAddress = new Uri("https://localhost:44365/api/autor/");
-            });
-
-            services.AddHttpClient<ILivroHttpClient, LivroHttpClient>(client =>
-            {
-                client.BaseAddress = new Uri("https://localhost:44365/api/livro/");
-            });
+            services.RegisterDependencies(Configuration);
 
             services.AddAuthentication()
                 .AddGoogle(options =>

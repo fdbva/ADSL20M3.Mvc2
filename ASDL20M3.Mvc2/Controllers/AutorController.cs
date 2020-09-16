@@ -2,33 +2,33 @@
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ASDL20M3.Mvc2.HttpServices;
-using ASDL20M3.Mvc2.Models;
+using Application.AppServices;
+using Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASDL20M3.Mvc2.Controllers
 {
     public class AutorController : Controller
     {
-        private readonly IAutorHttpClient _autorHttpClient;
+        private readonly IAutorAppService _autorAppService;
 
         //Lembrar de registrar dependência no Startup.cs
         public AutorController(
-            IAutorHttpClient autorHttpClient)
+            IAutorAppService autorAppService)
         {
-            _autorHttpClient = autorHttpClient;
+            _autorAppService = autorAppService;
         }
 
         // GET: Autor
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var autores = await _autorHttpClient.GetAllAsync();
+            var autores = _autorAppService.GetAll();
 
             return View(autores);
         }
 
         // GET: Autor/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
@@ -37,7 +37,7 @@ namespace ASDL20M3.Mvc2.Controllers
 
             try
             {
-                var autorViewModel = await _autorHttpClient.GetByIdAsync(id.Value);
+                var autorViewModel = _autorAppService.GetById(id.Value);
 
                 return View(autorViewModel);
             }
@@ -70,13 +70,13 @@ namespace ASDL20M3.Mvc2.Controllers
         //[Authorize]
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AutorViewModel autorViewModel)
+        public IActionResult Create(AutorViewModel autorViewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var autor = await _autorHttpClient.CreateAsync(autorViewModel);
+                    var autor = _autorAppService.Create(autorViewModel);
                     return RedirectToAction(nameof(Details), new { id = autor.Id });
                 }
                 catch (JsonException e)
@@ -90,14 +90,14 @@ namespace ASDL20M3.Mvc2.Controllers
         }
 
         // GET: Autor/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var autorViewModel = await _autorHttpClient.GetByIdAsync(id.Value);
+            var autorViewModel = _autorAppService.GetById(id.Value);
             if (autorViewModel == null)
             {
                 return NotFound();
@@ -111,7 +111,7 @@ namespace ASDL20M3.Mvc2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //[Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,UltimoNome,Nascimento")] AutorViewModel autorViewModel)
+        public IActionResult Edit(int id, [Bind("Id,Nome,UltimoNome,Nascimento")] AutorViewModel autorViewModel)
         {
             if (id != autorViewModel.Id)
             {
@@ -120,21 +120,21 @@ namespace ASDL20M3.Mvc2.Controllers
 
             if (ModelState.IsValid)
             {
-                await _autorHttpClient.UpdateAsync(autorViewModel);
+                _autorAppService.Update(autorViewModel);
                 return RedirectToAction(nameof(Index));
             }
             return View(autorViewModel);
         }
 
         // GET: Autor/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var autorViewModel = await _autorHttpClient.GetByIdAsync(id.Value);
+            var autorViewModel = _autorAppService.GetById(id.Value);
             if (autorViewModel == null)
             {
                 return NotFound();
@@ -147,15 +147,15 @@ namespace ASDL20M3.Mvc2.Controllers
         //[Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            await _autorHttpClient.DeleteAsync(id);
+            _autorAppService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> AutorViewModelExists(int id)
+        private bool AutorViewModelExists(int id)
         {
-            var autorEncontrado = await _autorHttpClient.GetByIdAsync(id);
+            var autorEncontrado = _autorAppService.GetById(id);
             return autorEncontrado != null;
         }
     }
