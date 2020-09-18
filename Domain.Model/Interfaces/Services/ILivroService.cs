@@ -3,14 +3,11 @@ using Domain.Model.Models;
 
 namespace Domain.Model.Interfaces.Services
 {
-    public interface ILivroService
+    public interface ILivroService : IBaseService<LivroModel>
     {
+        LivroModel Create(LivroAutorAggregateModel livroModel);
         IEnumerable<LivroModel> GetAll(
             string searchText);
-        LivroModel GetById(int id);
-        LivroModel Create(LivroAutorAggregateModel livroModel);
-        LivroModel Update(LivroModel livroModel);
-        void Delete(int id);
         bool CheckIsbn(string isbn, int id);
     }
 }

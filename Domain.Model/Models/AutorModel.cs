@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Domain.Model.Models.Constants;
-using System.Text.Json.Serialization;
 
 namespace Domain.Model.Models
 {
-    public class AutorModel
+    public class AutorModel : BaseModel
     {
-        public int Id { get; set; }
-
         [StringLength(100, MinimumLength = 3, ErrorMessage = ValidationConstants.StringLengthErrorMessage)]
         public string Nome { get; set; }
 

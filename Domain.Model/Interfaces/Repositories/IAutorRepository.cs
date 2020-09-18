@@ -3,12 +3,7 @@ using Domain.Model.Models;
 
 namespace Domain.Model.Interfaces.Repositories
 {
-    public interface IAutorRepository
+    public interface IAutorRepository : ICrudRepository<AutorModel>
     {
-        IEnumerable<AutorModel> GetAll();
-        AutorModel GetById(int id);
-        AutorModel Create(AutorModel autorModel);
-        AutorModel Update(AutorModel autorModel);
-        void Delete(int id);
     }
 }

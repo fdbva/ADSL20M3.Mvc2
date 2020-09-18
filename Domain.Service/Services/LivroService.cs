@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Transactions;
 using Domain.Model.Interfaces.Repositories;
 using Domain.Model.Interfaces.Services;
 using Domain.Model.Models;
@@ -25,9 +24,19 @@ namespace Domain.Service.Services
             return _livroRepository.GetAll(searchText);
         }
 
+        public IEnumerable<LivroModel> GetAll()
+        {
+            return _livroRepository.GetAll();
+        }
+
         public LivroModel GetById(int id)
         {
             return _livroRepository.GetById(id);
+        }
+
+        public LivroModel Create(LivroModel livroModel)
+        {
+            return _livroRepository.Create(livroModel);
         }
 
         public LivroModel Create(LivroAutorAggregateModel livroAutorAggregateModel)

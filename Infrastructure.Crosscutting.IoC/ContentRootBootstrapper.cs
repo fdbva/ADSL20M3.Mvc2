@@ -2,12 +2,12 @@
 using Application.AppServices.Implementations;
 using AutoMapper;
 using Data.Infrastructure.Context;
-using Data.Infrastructure.Repositories;
 using Domain.Model.Interfaces.Repositories;
 using Domain.Model.Interfaces.Services;
 using Domain.Model.Interfaces.UoW;
 using Domain.Service.Services;
 using Infrastructure.Crosscutting.IoC.MappingConfig;
+using Infrastructure.Data.Repositories;
 using Infrastructure.Data.UoW;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
