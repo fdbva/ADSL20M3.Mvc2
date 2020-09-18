@@ -28,7 +28,7 @@ namespace Data.Infrastructure.Repositories
 
             return string.IsNullOrWhiteSpace(searchText)
                 ? livros
-                : livros.Where(x => x.Titulo == searchText);
+                : livros.Where(x => x.Titulo.Contains(searchText));
         }
 
         public LivroModel GetById(int id)

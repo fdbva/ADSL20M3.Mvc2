@@ -24,8 +24,8 @@ namespace Infrastructure.Crosscutting.IoC
             services.AddDbContext<BibliotecaContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("BibliotecaContext")));
 
-            services.AddAutoMapper(typeof(MappingProfiles));
-
+            services.AddAutoMapper(x => x.AddProfile(typeof(MappingProfiles)));
+            
             //Registro das dependências
             services.AddScoped<IAutorAppService, AutorAppService>();
             services.AddScoped<IAutorService, AutorService>();
