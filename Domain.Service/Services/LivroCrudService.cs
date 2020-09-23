@@ -5,38 +5,17 @@ using Domain.Model.Models;
 
 namespace Domain.Service.Services
 {
-    public class LivroService : ILivroService
+    public class LivroCrudService : BaseCrudService<LivroModel>, ILivroCrudService
     {
         private readonly IAutorRepository _autorRepository;
         private readonly ILivroRepository _livroRepository;
 
-        public LivroService(
+        public LivroCrudService(
             IAutorRepository autorRepository,
-            ILivroRepository livroRepository)
+            ILivroRepository livroRepository) : base(livroRepository)
         {
             _autorRepository = autorRepository;
             _livroRepository = livroRepository;
-        }
-
-        public IEnumerable<LivroModel> GetAll(
-            string searchText)
-        {
-            return _livroRepository.GetAll(searchText);
-        }
-
-        public IEnumerable<LivroModel> GetAll()
-        {
-            return _livroRepository.GetAll();
-        }
-
-        public LivroModel GetById(int id)
-        {
-            return _livroRepository.GetById(id);
-        }
-
-        public LivroModel Create(LivroModel livroModel)
-        {
-            return _livroRepository.Create(livroModel);
         }
 
         public LivroModel Create(LivroAutorAggregateModel livroAutorAggregateModel)
@@ -57,16 +36,6 @@ namespace Domain.Service.Services
             //Exemplo com transaction sem UnitOfWork e SaveChanges nos Repositories
             //transactionScope.Complete();
             return livro;
-        }
-
-        public LivroModel Update(LivroModel livroModel)
-        {
-            return _livroRepository.Update(livroModel);
-        }
-
-        public void Delete(int id)
-        {
-            _livroRepository.Delete(id);
         }
 
         public bool CheckIsbn(string isbn, int id)

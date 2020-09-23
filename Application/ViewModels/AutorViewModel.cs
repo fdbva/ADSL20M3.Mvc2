@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels
 {
-    public class AutorViewModel
+    public class AutorViewModel : BaseViewModel
     {
-        public int Id { get; set; }
-
         [StringLength(100, MinimumLength = 3)]
         public string Nome { get; set; }
 

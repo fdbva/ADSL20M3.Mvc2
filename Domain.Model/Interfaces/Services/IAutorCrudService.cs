@@ -2,7 +2,7 @@
 
 namespace Domain.Model.Interfaces.Services
 {
-    public interface IAutorService : IBaseService<AutorModel>
+    public interface IAutorCrudService : IBaseCrudService<AutorModel>
     {
     }
 }

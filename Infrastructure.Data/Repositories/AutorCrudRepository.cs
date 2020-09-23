@@ -9,21 +9,19 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Data.Repositories
 {
     //Lembrar de registrar dependência no Startup.cs
-    public class AutorRepository : BaseRepository<AutorModel>, IAutorRepository
+    public class AutorCrudRepository : BaseCrudRepository<AutorModel>, IAutorRepository
     {
         private readonly BibliotecaContext _bibliotecaContext;
 
-        public AutorRepository(
+        public AutorCrudRepository(
             BibliotecaContext bibliotecaContext) : base(bibliotecaContext)
         {
             _bibliotecaContext = bibliotecaContext;
         }
 
-        public override IEnumerable<AutorModel> GetAll()
+        protected override bool Filter(AutorModel autorModel, string searchText)
         {
-            return _bibliotecaContext
-                .Autores
-                .Include(x => x.Livros);
+            return autorModel.Nome.Contains(searchText);
         }
 
         public override AutorModel GetById(int id)

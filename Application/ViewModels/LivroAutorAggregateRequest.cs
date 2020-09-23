@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels
 {
-    public class LivroAutorAggregateRequest
+    public class LivroAutorAggregateRequest : BaseViewModel
     {
         public LivroViewModel Livro { get; set; }
         public AutorViewModel Autor { get; set; }

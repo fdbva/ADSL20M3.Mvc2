@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using Domain.Model.Models;
+﻿using Domain.Model.Models;
 
 namespace Domain.Model.Interfaces.Repositories
 {
-    public interface IAutorRepository : ICrudRepository<AutorModel>
+    public interface IAutorRepository : IBaseCrudRepository<AutorModel>
     {
     }
 }

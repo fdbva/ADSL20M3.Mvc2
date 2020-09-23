@@ -7,51 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace ASDL20M3.Mvc2.Controllers
 {
     //[Authorize(Policy = "Admin")]
-    public class LivroController : Controller
+    public class LivroController : BaseCrudController<LivroViewModel>
     {
-        private readonly IAutorAppService _autorAppService;
-        private readonly ILivroAppService _livroAppService;
+        private readonly IAutorCrudAppService _autorCrudAppService;
+        private readonly ILivroCrudAppService _livroCrudAppService;
 
         public LivroController(
-            IAutorAppService autorAppService,
-            ILivroAppService livroAppService)
+            IAutorCrudAppService autorCrudAppService,
+            ILivroCrudAppService livroCrudAppService) : base(livroCrudAppService)
         {
-            _autorAppService = autorAppService;
-            _livroAppService = livroAppService;
+            _autorCrudAppService = autorCrudAppService;
+            _livroCrudAppService = livroCrudAppService;
         }
 
-        // GET: Livro
-        public IActionResult Index(
-            string searchText)
+        public override IActionResult Create()
         {
-            var livros = _livroAppService.GetAll(searchText);
-
-            ViewBag.SearchText = searchText;
-
-            return View(livros.ToList());
-        }
-
-        // GET: Livro/Details/5
-        public IActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var livroViewModel = _livroAppService.GetById(id.Value);
-            if (livroViewModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(livroViewModel);
-        }
-
-        // GET: Livro/Create
-        public IActionResult Create()
-        {
-            var autores = _autorAppService.GetAll();
+            var autores = _autorCrudAppService.GetAll();
             ViewData["AutorId"] = new SelectList(
                 autores, 
                 nameof(AutorViewModel.Id), 
@@ -73,10 +44,10 @@ namespace ASDL20M3.Mvc2.Controllers
                 var livroAutorAggregateRequest = 
                     new LivroAutorAggregateRequest(livroAutorCreateViewModel);
 
-                _livroAppService.Create(livroAutorAggregateRequest);
+                _livroCrudAppService.Create(livroAutorAggregateRequest);
                 return RedirectToAction(nameof(Index));
             }
-            var autores = _autorAppService.GetAll();
+            var autores = _autorCrudAppService.GetAll();
             ViewData["AutorId"] = new SelectList(
                 autores, 
                 nameof(AutorViewModel.Id), 
@@ -86,19 +57,19 @@ namespace ASDL20M3.Mvc2.Controllers
         }
 
         // GET: Livro/Edit/5
-        public IActionResult Edit(int? id)
+        public override IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var livroViewModel = _livroAppService.GetById(id.Value);
+            var livroViewModel = _livroCrudAppService.GetById(id.Value);
             if (livroViewModel == null)
             {
                 return NotFound();
             }
-            var autores = _autorAppService.GetAll();
+            var autores = _autorCrudAppService.GetAll();
             ViewData["AutorId"] = new SelectList(
                 autores, 
                 nameof(AutorViewModel.Id), 
@@ -112,7 +83,7 @@ namespace ASDL20M3.Mvc2.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(
+        public override IActionResult Edit(
             int id, 
             LivroViewModel livroViewModel)
         {
@@ -123,10 +94,10 @@ namespace ASDL20M3.Mvc2.Controllers
 
             if (ModelState.IsValid)
             {
-                _livroAppService.Update(livroViewModel);
+                _livroCrudAppService.Update(livroViewModel);
                 return RedirectToAction(nameof(Index));
             }
-            var autores = _autorAppService.GetAll();
+            var autores = _autorCrudAppService.GetAll();
             ViewData["AutorId"] = new SelectList(
                 autores, 
                 nameof(AutorViewModel.Id), 
@@ -135,41 +106,10 @@ namespace ASDL20M3.Mvc2.Controllers
             return View(livroViewModel);
         }
 
-        // GET: Livro/Delete/5
-        public IActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var livroViewModel = _livroAppService.GetById(id.Value);
-            if (livroViewModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(livroViewModel);
-        }
-
-        // POST: Livro/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            _livroAppService.Delete(id);
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool LivroViewModelExists(int id)
-        {
-            return _livroAppService.GetById(id) != null;
-        }
-
         [AcceptVerbs("GET", "POST")]
         public IActionResult CheckIsbn(string isbn, int id)
         {
-            if (!_livroAppService.CheckIsbn(isbn, id))
+            if (!_livroCrudAppService.CheckIsbn(isbn, id))
             {
                 return Json($"ISBN {isbn} já está sendo usado.");
             }

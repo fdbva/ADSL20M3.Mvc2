@@ -6,6 +6,10 @@
 
 <h1>Index</h1>
 
+<form asp-action="Index">
+    <input type="text" name="searchText" id="searchText" value="@ViewBag.SearchText" />
+    <input type="submit" value="Buscar Nome" class="btn btn-danger" />
+</form>
 <p>
     <a asp-action="Create">Create New</a>
 </p>

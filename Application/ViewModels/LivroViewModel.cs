@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Application.ViewModels
 {
-    public class LivroViewModel
+    public class LivroViewModel : BaseViewModel
     {
-        public int Id { get; set; }
-
         [Remote(action: "CheckIsbn", controller: "Livro", AdditionalFields = nameof(Id))]
         public string Isbn { get; set; }
 

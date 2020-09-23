@@ -3,7 +3,7 @@ using Domain.Model.Models;
 
 namespace Domain.Model.Interfaces.Services
 {
-    public interface IBaseService<TEntityModel> : ICrudRepository<TEntityModel> where TEntityModel : BaseModel
+    public interface IBaseCrudService<TModel> : IBaseCrudRepository<TModel> where TModel : BaseModel
     {
     }
 }

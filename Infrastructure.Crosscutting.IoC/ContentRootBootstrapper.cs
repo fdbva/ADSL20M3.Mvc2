@@ -27,12 +27,12 @@ namespace Infrastructure.Crosscutting.IoC
             services.AddAutoMapper(x => x.AddProfile(typeof(MappingProfiles)));
             
             //Registro das dependências
-            services.AddScoped<IAutorAppService, AutorAppService>();
-            services.AddScoped<IAutorService, AutorService>();
-            services.AddScoped<IAutorRepository, AutorRepository>();
-            services.AddScoped<ILivroAppService, LivroAppService>();
-            services.AddScoped<ILivroService, LivroService>();
-            services.AddScoped<ILivroRepository, LivroRepository>();
+            services.AddScoped<IAutorCrudAppService, AutorCrudAppService>();
+            services.AddScoped<IAutorCrudService, AutorCrudService>();
+            services.AddScoped<IAutorRepository, AutorCrudRepository>();
+            services.AddScoped<ILivroCrudAppService, LivroCrudAppService>();
+            services.AddScoped<ILivroCrudService, LivroCrudService>();
+            services.AddScoped<ILivroRepository, LivroCrudRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

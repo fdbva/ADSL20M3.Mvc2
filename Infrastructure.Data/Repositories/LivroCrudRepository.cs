@@ -7,24 +7,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories
 {
-    public class LivroRepository : BaseRepository<LivroModel>, ILivroRepository
+    public class LivroCrudRepository : BaseCrudRepository<LivroModel>, ILivroRepository
     {
         private readonly BibliotecaContext _bibliotecaContext;
 
-        public LivroRepository(
+        public LivroCrudRepository(
             BibliotecaContext bibliotecaContext) : base(bibliotecaContext)
         {
             _bibliotecaContext = bibliotecaContext;
         }
 
-        public IEnumerable<LivroModel> GetAll(
-            string searchText)
+        protected override bool Filter(LivroModel livroModel, string searchText)
         {
-            var livros = GetAll();
-
-            return string.IsNullOrWhiteSpace(searchText)
-                ? livros
-                : livros.Where(x => x.Titulo.Contains(searchText));
+            return livroModel.Titulo.Contains(searchText);
         }
 
         public override LivroModel GetById(int id)
