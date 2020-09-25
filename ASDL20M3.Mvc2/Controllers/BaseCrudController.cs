@@ -38,8 +38,11 @@ namespace ASDL20M3.Mvc2.Controllers
             return View(viewModel);
         }
 
+        protected virtual void PrepareViewData(int? id = null) { }
+        protected virtual void PrepareViewData(TViewModel viewModel) { }
         public virtual IActionResult Create()
         {
+            PrepareViewData();
             return View();
         }
 
@@ -67,6 +70,8 @@ namespace ASDL20M3.Mvc2.Controllers
             {
                 return NotFound();
             }
+
+            PrepareViewData(viewModel);
             return View(viewModel);
         }
 
@@ -85,6 +90,8 @@ namespace ASDL20M3.Mvc2.Controllers
                 _baseCrudAppService.Update(viewModel);
                 return RedirectToAction(nameof(Index));
             }
+
+            PrepareViewData(viewModel);
             return View(viewModel);
         }
 

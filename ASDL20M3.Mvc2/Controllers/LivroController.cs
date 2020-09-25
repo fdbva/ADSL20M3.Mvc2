@@ -20,15 +20,19 @@ namespace ASDL20M3.Mvc2.Controllers
             _livroCrudAppService = livroCrudAppService;
         }
 
-        public override IActionResult Create()
+        protected override void PrepareViewData(int? id = null)
         {
             var autores = _autorCrudAppService.GetAll();
             ViewData["AutorId"] = new SelectList(
-                autores, 
-                nameof(AutorViewModel.Id), 
+                autores,
+                nameof(AutorViewModel.Id),
                 nameof(AutorViewModel.NomeCompletoId),
-                null);
-            return View();
+                id);
+        }
+
+        protected override void PrepareViewData(LivroViewModel livroViewModel)
+        {
+            PrepareViewData(livroViewModel.AutorId);
         }
 
         // POST: Livro/Create
@@ -36,7 +40,7 @@ namespace ASDL20M3.Mvc2.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(
+        public IActionResult CreateAggregate(
             LivroAutorCreateViewModel livroAutorCreateViewModel)
         {
             if (ModelState.IsValid)
@@ -47,63 +51,9 @@ namespace ASDL20M3.Mvc2.Controllers
                 _livroCrudAppService.Create(livroAutorAggregateRequest);
                 return RedirectToAction(nameof(Index));
             }
-            var autores = _autorCrudAppService.GetAll();
-            ViewData["AutorId"] = new SelectList(
-                autores, 
-                nameof(AutorViewModel.Id), 
-                nameof(AutorViewModel.NomeCompletoId),
-                livroAutorCreateViewModel.AutorId);
-            return View(livroAutorCreateViewModel);
-        }
 
-        // GET: Livro/Edit/5
-        public override IActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var livroViewModel = _livroCrudAppService.GetById(id.Value);
-            if (livroViewModel == null)
-            {
-                return NotFound();
-            }
-            var autores = _autorCrudAppService.GetAll();
-            ViewData["AutorId"] = new SelectList(
-                autores, 
-                nameof(AutorViewModel.Id), 
-                nameof(AutorViewModel.NomeCompletoId), 
-                livroViewModel.AutorId);
-            return View(livroViewModel);
-        }
-
-        // POST: Livro/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public override IActionResult Edit(
-            int id, 
-            LivroViewModel livroViewModel)
-        {
-            if (id != livroViewModel.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                _livroCrudAppService.Update(livroViewModel);
-                return RedirectToAction(nameof(Index));
-            }
-            var autores = _autorCrudAppService.GetAll();
-            ViewData["AutorId"] = new SelectList(
-                autores, 
-                nameof(AutorViewModel.Id), 
-                nameof(AutorViewModel.NomeCompletoId), 
-                livroViewModel.AutorId);
-            return View(livroViewModel);
+            PrepareViewData(livroAutorCreateViewModel.AutorId);
+            return View("Create", livroAutorCreateViewModel);
         }
 
         [AcceptVerbs("GET", "POST")]
