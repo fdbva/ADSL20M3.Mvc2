@@ -1,61 +1,38 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
-using ASDL20M3.Mvc2.HttpServices;
-using ASDL20M3.Mvc2.Models;
-using Microsoft.AspNetCore.Authorization;
+using Application.AppServices;
+using Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ASDL20M3.Mvc2.Controllers
 {
     //[Authorize(Policy = "Admin")]
-    public class LivroController : Controller
+    public class LivroController : BaseCrudController<LivroViewModel>
     {
-        private readonly IAutorHttpClient _autorHttpClient;
-        private readonly ILivroHttpClient _livroHttpClient;
+        private readonly IAutorCrudAppService _autorCrudAppService;
+        private readonly ILivroCrudAppService _livroCrudAppService;
 
         public LivroController(
-            IAutorHttpClient autorHttpClient,
-            ILivroHttpClient livroHttpClient)
+            IAutorCrudAppService autorCrudAppService,
+            ILivroCrudAppService livroCrudAppService) : base(livroCrudAppService)
         {
-            _autorHttpClient = autorHttpClient;
-            _livroHttpClient = livroHttpClient;
+            _autorCrudAppService = autorCrudAppService;
+            _livroCrudAppService = livroCrudAppService;
         }
 
-        // GET: Livro
-        public async Task<IActionResult> Index()
+        protected override void PrepareViewData(int? id = null)
         {
-            var bibliotecaContext = await _livroHttpClient.GetAllAsync();
-            return View(bibliotecaContext.ToList());
-        }
-
-        // GET: Livro/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var livroViewModel = await _livroHttpClient.GetByIdAsync(id.Value);
-            if (livroViewModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(livroViewModel);
-        }
-
-        // GET: Livro/Create
-        public async Task<IActionResult> Create()
-        {
-            var autores = await _autorHttpClient.GetAllAsync();
+            var autores = _autorCrudAppService.GetAll();
             ViewData["AutorId"] = new SelectList(
-                autores, 
-                nameof(AutorViewModel.Id), 
+                autores,
+                nameof(AutorViewModel.Id),
                 nameof(AutorViewModel.NomeCompletoId),
-                null);
-            return View();
+                id);
+        }
+
+        protected override void PrepareViewData(LivroViewModel livroViewModel)
+        {
+            PrepareViewData(livroViewModel.AutorId);
         }
 
         // POST: Livro/Create
@@ -63,111 +40,26 @@ namespace ASDL20M3.Mvc2.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(
+        public IActionResult CreateAggregate(
             LivroAutorCreateViewModel livroAutorCreateViewModel)
         {
             if (ModelState.IsValid)
             {
-                var livroAutorAggregateViewModel = 
+                var livroAutorAggregateRequest = 
                     new LivroAutorAggregateRequest(livroAutorCreateViewModel);
 
-                await _livroHttpClient.CreateAsync(livroAutorAggregateViewModel);
+                _livroCrudAppService.Create(livroAutorAggregateRequest);
                 return RedirectToAction(nameof(Index));
             }
-            var autores = await _autorHttpClient.GetAllAsync();
-            ViewData["AutorId"] = new SelectList(
-                autores, 
-                nameof(AutorViewModel.Id), 
-                nameof(AutorViewModel.NomeCompletoId),
-                livroAutorCreateViewModel.AutorId);
-            return View(livroAutorCreateViewModel);
-        }
 
-        // GET: Livro/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var livroViewModel = await _livroHttpClient.GetByIdAsync(id.Value);
-            if (livroViewModel == null)
-            {
-                return NotFound();
-            }
-            var autores = await _autorHttpClient.GetAllAsync();
-            ViewData["AutorId"] = new SelectList(
-                autores, 
-                nameof(AutorViewModel.Id), 
-                nameof(AutorViewModel.NomeCompletoId), 
-                livroViewModel.AutorId);
-            return View(livroViewModel);
-        }
-
-        // POST: Livro/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(
-            int id, 
-            LivroViewModel livroViewModel)
-        {
-            if (id != livroViewModel.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                await _livroHttpClient.UpdateAsync(livroViewModel);
-                return RedirectToAction(nameof(Index));
-            }
-            var autores = await _autorHttpClient.GetAllAsync();
-            ViewData["AutorId"] = new SelectList(
-                autores, 
-                nameof(AutorViewModel.Id), 
-                nameof(AutorViewModel.NomeCompletoId), 
-                livroViewModel.AutorId);
-            return View(livroViewModel);
-        }
-
-        // GET: Livro/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var livroViewModel = await _livroHttpClient.GetByIdAsync(id.Value);
-            if (livroViewModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(livroViewModel);
-        }
-
-        // POST: Livro/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            await _livroHttpClient.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
-        }
-
-        private async Task<bool> LivroViewModelExists(int id)
-        {
-            return await _livroHttpClient.GetByIdAsync(id) != null;
+            PrepareViewData(livroAutorCreateViewModel.AutorId);
+            return View("Create", livroAutorCreateViewModel);
         }
 
         [AcceptVerbs("GET", "POST")]
-        public async Task<IActionResult> CheckIsbn(string isbn, int id)
+        public IActionResult CheckIsbn(string isbn, int id)
         {
-            if (!await _livroHttpClient.CheckIsbn(isbn, id))
+            if (!_livroCrudAppService.CheckIsbn(isbn, id))
             {
                 return Json($"ISBN {isbn} já está sendo usado.");
             }

@@ -1,15 +1,9 @@
-﻿using System.Collections.Generic;
-using Domain.Model.Models;
+﻿using Domain.Model.Models;
 
 namespace Domain.Model.Interfaces.Repositories
 {
-    public interface ILivroRepository
+    public interface ILivroRepository : IBaseCrudRepository<LivroModel>
     {
-        IEnumerable<LivroModel> GetAll();
-        LivroModel GetById(int id);
-        LivroModel Create(LivroModel livroModel);
-        LivroModel Update(LivroModel livroModel);
-        void Delete(int id);
         LivroModel GetIsbnNotFromThisId(string isbn, int id);
     }
 }

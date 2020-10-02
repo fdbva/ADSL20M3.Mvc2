@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace ASDL20M3.Mvc2.Models
+﻿namespace Application.ViewModels
 {
-    public class LivroAutorAggregateRequest
+    public class LivroAutorAggregateRequest : BaseViewModel
     {
         public LivroViewModel Livro { get; set; }
         public AutorViewModel Autor { get; set; }

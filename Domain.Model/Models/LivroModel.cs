@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Domain.Model.Models
 {
-    public class LivroModel
+    public class LivroModel : BaseModel
     {
-        public int Id { get; set; }
-
         [Remote(action: "CheckIsbn", controller: "Livro", AdditionalFields = nameof(Id))]
         public string Isbn { get; set; }
 
